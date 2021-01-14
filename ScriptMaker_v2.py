@@ -20,9 +20,9 @@ def createScript(user_input, sampleStart, temperature):
 
 	#calculated total water amount needed and sets water starting location
 	waterTotal = calculateTotalWater(user_input)
-	if waterTotal > 15000:
+	if waterTotal > 15:
 		waterTube = ""
-	elif waterTotal > 1400:
+	elif waterTotal > 1.4:
 		waterTube = "opentrons_15_tuberack_nest_15ml_conical"
 	elif sample == "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap":
 		waterTube = "opentrons_24_aluminumblock_nest_1.5ml_snapcap"

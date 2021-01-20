@@ -87,7 +87,7 @@ def run(protocol):
 	temperature_module.deactivate()\n
 	{heightFunction}\n'''
 
-	with open('C:/Users/dcowan2/Desktop/output.py', 'w') as outputFile:
+	with open('/Users/gencore/Desktop/output.py', 'w') as outputFile:
 		outputFile.write(outputScript)
 
 def createScriptHead(user_input):
@@ -273,9 +273,9 @@ def dilutionScript(total):
 	return dilutionScript
 
 
-test_input = [[2,3,4], [4,3,2], [50,15,37]]
+#test_input = [[2,3,4], [4,3,2], [50,15,37]]
 #testStart = "1.5mL Tubes"
-testStart = "96 well plate"
-testTemp = "yes"
-createScript(test_input, testStart, testTemp)
-print("check output.py")
+#testStart = "96 well plate"
+#testTemp = "yes"
+#createScript(test_input, testStart, testTemp)
+#print("check output.py")

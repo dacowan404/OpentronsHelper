@@ -52,6 +52,11 @@ for text in tempOptions:
     tk.Radiobutton(frame1, text=text, variable=temperature, value=text).pack()
 
 button2 = tk.Button(master=frame1, text="Create Script", command=createScript)
+
+#frame2 = tk.Frame(master=root)
+
+
+
 button2.pack()
 frame1.pack()
 root.mainloop()

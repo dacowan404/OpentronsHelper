@@ -87,7 +87,7 @@ def run(protocol):
 	temperature_module.deactivate()\n
 	{heightFunction}\n'''
 
-	with open('/Users/gencore/Desktop/output.py', 'w') as outputFile:
+	with open('C:/Users/dcowan2/Desktop/output.py', 'w') as outputFile:
 		outputFile.write(outputScript)
 
 def createScriptHead(user_input):
@@ -187,11 +187,11 @@ def sampleDistributionOption1():
 		if numberOfDilutions[num] > 0:
 			for i in range(numberOfDilutions[num]):
 				if i == 0:
-					pipette.transfer(1, startRack.wells()[num], dilution_plate.wells()[dilutionCount], new_tip='never', mix_after=(5,5))
+					pipette.transfer(1, startRack.wells()[num], dilution_plate[int(dilutionCount/96)].wells()[dilutionCount%96], new_tip='never', mix_after=(5,5))
 				else:
-					pipette.transfer(1, dilution_plate.wells()[dilutionCount-1], dilution_plate.wells()[dilutionCount], new_tip='never', mix_after=(5,5))
+					pipette.transfer(1, dilution_plate[int((dilutionCount-1)/96)].wells()[(dilutionCount-1)%96], dilution_plate[int(dilutionCount/96)].wells()[dilutionCount%96], new_tip='never', mix_after=(5,5))
 				dilutionCount += 1
-			pipette.transfer(volume, dilution_plate.wells()[dilutionCount-1], finish_plate.wells()[num], new_tip='never')
+			pipette.transfer(volume, dilution_plate[int((dilutionCount-1)/96)].wells()[(dilutionCount-1)%96], finish_plate.wells()[num], new_tip='never')
 		else:
 			pipette.transfer(volume, startRack.wells()[num], finish_plate.wells()[num], new_tip='never')
 		pipette.drop_tip()
@@ -207,7 +207,6 @@ def sampleDistributionOption2():
 	sampleDistribution = """
 	#transfers sample into dilution plate (as needed) and then into finish plate
 	start_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr', '4', 'start plate')
-	
 	dilutionCount = 0
 	for num, volume in enumerate(sample_volumes):
 		if volume == 0:
@@ -216,11 +215,11 @@ def sampleDistributionOption2():
 		if numberOfDilutions[num] > 0:
 			for i in range(numberOfDilutions[num]):
 				if i == 0:
-					pipette.transfer(1, start_plate.wells()[num], dilution_plate.wells()[dilutionCount], new_tip='never', mix_after = (5,5))
+					pipette.transfer(1, start_plate.wells()[num], dilution_plate[int(dilutionCount/96)].wells()[dilutionCount%96], new_tip='never', mix_after = (5,5))
 				else:
-					pipette.transfer(1, dilution_plate.wells()[dilutionCount-1], dilution_plate.wells()[dilutionCount], new_tip='never', mix_after = (5,5))
+					pipette.transfer(1, dilution_plate[int((dilutionCount-1)/96)].wells()[(dilutionCount-1)%96], dilution_plate[int(dilutionCount/96)].wells()[dilutionCount%96], new_tip='never', mix_after = (5,5))
 				dilutionCount += 1
-			pipette.transfer(volume, dilution_plate.wells()[dilutionCount-1], finish_plate.wells()[num], new_tip='never')
+			pipette.transfer(volume, dilution_plate[int((dilutionCount-1)/96)].wells()[(dilutionCount-1)%96], finish_plate.wells()[num], new_tip='never')
 		else:
 			pipette.transfer(volume, start_plate.wells()[num], finish_plate.wells()[num], new_tip='never')
 		pipette.drop_tip()
@@ -255,27 +254,28 @@ def sampleDistributionOption4():
 	return sampleDistribution
 
 def dilutionScript(total):
-	#dilutions = list(map(user_input[2], int))
 	if total < 97:
 		dilutionScript = """\t#distrbutes water to dilution plate
 	#if len(numberOfDilutions) > 0:
-	dilution_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr', '7', 'dilution plate') 
-	pipette.transfer(9, water, dilution_plate.wells()[:sum(numberOfDilutions)], new_tip = "never")\n"""
+	dilution_plate1 = protocol.load_labware('biorad_96_wellplate_200ul_pcr', '7', 'dilution plate1')
+	dilution_plate = [dilution_plate1] 
+	pipette.transfer(9, water, dilution_plate[0].wells()[:sum(numberOfDilutions)], new_tip = "never")\n"""
 	else:
 		dilutionScript = """#distrbutes water to dilution plate
 	#if len(dilution_positions) > 0:
-	dilution_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr', '7', 'dilution plate')
+	dilution_plate1 = protocol.load_labware('biorad_96_wellplate_200ul_pcr', '7', 'dilution plate1')
 	dilution_plate2 = protocol.load_labware('biorad_96_wellplate_200ul_pcr', '8', 'dilution plate2')
-	for i in range(97): 
- 		pipette.transfer(9, water, dilution_plate.wells()[i], new_tip = "never")
-	for i in range(97, sum(numberOfDilutions)):
-		pipette.transfer(9, water, dilution_plate2.wells()[i - 96], new_tip = "never")\n"""
+	dilution_plate = [dilution_plate1, dilution_plate2]
+	for i in range(96): 
+ 		pipette.transfer(9, water, dilution_plate[0].wells()[i], new_tip = "never")
+	for i in range(96, sum(numberOfDilutions)):
+		pipette.transfer(9, water, dilution_plate[1].wells()[i - 96], new_tip = "never")\n"""
 	return dilutionScript
 
 
-"""test_input = [[2,3,4], [4,3,2], [0,1,2]]
-testStart = "1.5mL Tubes"
-#testStart = "96 well plate"
+test_input = [[2,3,4], [4,3,2], [50,15,37]]
+#testStart = "1.5mL Tubes"
+testStart = "96 well plate"
 testTemp = "yes"
 createScript(test_input, testStart, testTemp)
-print("check output.py")"""
+print("check output.py")
